@@ -1,0 +1,267 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.header {
+  min-width: 100vw;
+}
+
+.up-header {
+  width: 100%;
+  height: 30px;
+  background-color: #26468f;
+}
+
+.navbar-menu {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding-right: 70px;
+  background-color: #eaeaea;
+}
+
+.navbar-menu .btn {
+  border: 0;
+  padding: 10px;
+  background-color: #26468f;
+  border-radius: 3px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.navbar-brand {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding-left: 70px;
+}
+
+.navbar-brand img {
+  width: 100px;
+  position: relative;
+  margin-right: 10px;
+  top: -30px;
+}
+
+.brand-title {
+  text-transform: uppercase;
+  color: #26468f;
+}
+
+.brand-title h4 {
+  font-size: 14px;
+}
+
+.brand-title h2 {
+  font-size: 23px;
+}
+
+.jumbotron {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  background-image: url(./../images/slides.png);
+  background-size: cover;
+  text-align: end;
+  padding-right: 70px;
+}
+
+.btn-jumbotron {
+  position: absolute;
+  bottom: 50px;
+  right: 45px;
+  width: 150px;
+  padding: 10px 40px;
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #26468f;
+  border-radius: 7px;
+  border: 0;
+  box-shadow: 3px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.pb {
+  padding-bottom: 30px;
+}
+
+.mb {
+  margin-bottom: 30px;
+}
+
+.title-content {
+  width: 100%;
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-content h3 span {
+  color: #26468f;
+}
+
+.kolom-service {
+  display: flex;
+}
+
+.kolom {
+  width: 50%;
+}
+
+.kolom div {
+  display: flex;
+}
+
+.kolom div img {
+  width: 40px;
+  height: 40px;
+}
+
+.kolom:nth-child(1) div {
+  justify-content: end;
+  padding-right: 20px;
+  padding-left: 70px;
+  margin-bottom: 20px;
+}
+
+.kolom:nth-child(1) div img {
+  margin-left: 20px;
+}
+
+.kolom:nth-child(1) div p {
+  text-align: end;
+}
+
+.kolom:nth-child(2) div {
+  padding-left: 20px;
+  padding-right: 70px;
+  margin-bottom: 20px;
+}
+
+.kolom:nth-child(2) img {
+  margin-right: 20px;
+}
+
+.about {
+  background-color: #fdfdfd;
+}
+
+.about-text {
+  text-align: center;
+}
+
+.btn-daftar {
+  border: 0;
+  background-color: #26468f;
+  padding: 12px 40px;
+  text-transform: uppercase;
+  font-size: 20px;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: 3px 3px rgba(0, 0, 0, 0.2);
+  margin-bottom: 50px;
+  cursor: pointer;
+}
+
+.about {
+  text-align: center;
+}
+
+.table {
+  margin: auto;
+}
+
+.table td {
+  padding: 5px;
+}
+
+.table .label {
+  text-align: end;
+  width: 35%;
+}
+
+.table .input {
+  text-align: start;
+  padding-left: 20px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+  width: 350px;
+  padding: 5px;
+}
+
+.input select {
+  width: 80px;
+  padding: 7px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.input img {
+  position: relative;
+  top: 7px;
+}
+
+.input input[type="checkbox"] {
+  margin-right: 7px;
+}
+
+.input span {
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.input i {
+  color: #26468f;
+  font-size: 12px;
+}
+
+.d-flex {
+  display: flex;
+  font-size: 12px;
+}
+
+.table .btn-form {
+  width: 150px;
+  padding: 7px;
+  color: #fff;
+  border: 0;
+  border-radius: 3px;
+  background-color: #26468f;
+}
+
+.input small {
+  color: #a6a4a4;
+}
+
+.step {
+  text-align: center;
+}
+
+.step img {
+  width: 50%;
+}
+
+.footer {
+  width: 100%;
+  height: 40px;
+  background-color: #26468f;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 12px;
+  padding-left: 350px;
+}
