@@ -1,0 +1,136 @@
+<script>
+import { onMounted } from "vue";
+import { reactive, ref } from "@vue/reactivity";
+import axios from "axios";
+import { RouterLink, useRouter, useRoute } from "vue-router";
+import NavbarComponent from "@/components/layouts/NavbarComponent.vue";
+import SidebarComponent from "@/components/layouts/SidebarComponent.vue";
+
+export default {
+  components: {
+    NavbarComponent,
+    SidebarComponent,
+  },
+  setup() {
+    const token = "9690fb8196780608aa119e9cadbf3901b8d6679995f2667a259a1f07fb7617cd";
+
+    let user = reactive({
+      name: "",
+      email: "",
+      gender: "",
+      status: "",
+    });
+
+    let validation = ref([]);
+
+    const router = useRouter();
+    const route = useRoute();
+
+    onMounted(() => {
+      axios
+        .get(`https://gorest.co.in/public/v2/users/${route.params.id}`)
+        .then((response) => {
+          user.name = response.data.name;
+          user.email = response.data.email;
+          user.gender = response.data.gender;
+          user.status = response.data.status;
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    });
+
+    function update() {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+      axios
+        .put(`https://gorest.co.in/public/v2/users/${route.params.id}`, this.user)
+        .then(() => {
+          router.push({
+            name: "daftar.pengguna",
+          });
+        })
+        .catch((err) => {
+          validation = err.response.data;
+          console.log(validation[0]);
+        });
+    }
+
+    return {
+      user,
+      validation,
+      router,
+      update,
+    };
+  },
+};
+</script>
+
+<template>
+  <NavbarComponent />
+  <div class="container-fluid">
+    <div class="row">
+      <SidebarComponent />
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="row mt-4">
+          <div class="col">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><router-link :to="{ name: 'daftar.pengguna' }" class="text-decoration-none">Daftar Pengguna</router-link></li>
+                <li class="breadcrumb-item active" aria-current="page">Ubah</li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-lg-10 col-xl-10 col-xxl-10">
+            <h3>Ubah Pengguna</h3>
+            <hr />
+            <div class="card shadow">
+              <div class="card-body">
+                <form @submit.prevent="update">
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input v-model="user.name" type="text" id="name" class="form-control" />
+                    <span v-if="validation.value" class="text-danger">
+                      {{ validation.value[0].message }}
+                    </span>
+                  </div>
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input v-model="user.email" type="email" id="email" class="form-control" />
+                    <span v-if="validation.email" class="text-danger">
+                      {{ validation.email[0] }}
+                    </span>
+                  </div>
+                  <div class="mb-3">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select v-model="user.gender" id="gender" class="form-select">
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+                    <span v-if="validation.gender" class="text-danger">
+                      {{ validation.gender[0] }}
+                    </span>
+                  </div>
+                  <div class="mb-3">
+                    <label for="status" class="form-label">Gender</label>
+                    <select v-model="user.status" id="status" class="form-select">
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                    </select>
+                    <span v-if="validation.status" class="text-danger">
+                      {{ validation.status[0] }}
+                    </span>
+                  </div>
+                  <div class="mb-3">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Submit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</template>
