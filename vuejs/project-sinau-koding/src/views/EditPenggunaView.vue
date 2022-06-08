@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { reactive, ref } from "@vue/reactivity";
 import axios from "axios";
 import { RouterLink, useRouter, useRoute } from "vue-router";
+import { useToast } from "vue-toastification";
 import NavbarComponent from "@/components/layouts/NavbarComponent.vue";
 import SidebarComponent from "@/components/layouts/SidebarComponent.vue";
 
@@ -26,6 +27,8 @@ export default {
     const router = useRouter();
     const route = useRoute();
 
+    const toast = useToast();
+
     onMounted(() => {
       axios
         .get(`https://gorest.co.in/public/v2/users/${route.params.id}`)
@@ -41,6 +44,15 @@ export default {
     });
 
     function update() {
+      const btnEditUser = document.querySelector(".btn-edit-user");
+      btnEditUser.removeChild(btnEditUser.children[0]);
+      btnEditUser.innerHTML = `
+        <span>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span>Loading...</span>
+        </span>
+      `;
+
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       axios
         .put(`https://gorest.co.in/public/v2/users/${route.params.id}`, this.user)
@@ -48,10 +60,18 @@ export default {
           router.push({
             name: "daftar.pengguna",
           });
+          toast.success("User berhasil dirubah!", {
+            type: "success",
+            position: "top-right",
+            timeout: 3000,
+          });
         })
         .catch((err) => {
           validation = err.response.data;
-          console.log(validation[0]);
+          btnEditUser.removeChild(btnEditUser.children[0]);
+          btnEditUser.innerHTML = `
+            <span><i class="bi bi-save"></i> Save</span>
+          `;
         });
     }
 
@@ -123,7 +143,9 @@ export default {
                     </span>
                   </div>
                   <div class="mb-3">
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Submit</button>
+                    <button type="submit" class="btn btn-primary btn-edit-user">
+                      <span><i class="bi bi-save"></i> Save</span>
+                    </button>
                   </div>
                 </form>
               </div>

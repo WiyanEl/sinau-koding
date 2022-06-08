@@ -2,6 +2,7 @@
 import { RouterLink } from "vue-router";
 import { onMounted, ref } from "vue";
 import axios from "axios";
+import { useToast } from "vue-toastification";
 import NavbarComponent from "@/components/layouts/NavbarComponent.vue";
 import SidebarComponent from "@/components/layouts/SidebarComponent.vue";
 
@@ -15,6 +16,8 @@ export default {
 
     let users = ref([]);
 
+    const toast = useToast();
+
     onMounted(() => {
       axios
         .get("https://gorest.co.in/public/v2/users")
@@ -26,11 +29,17 @@ export default {
         });
     });
 
-    function destroy(id, index) {
+    function destroy(id) {
+      console.log(this);
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       axios
         .delete(`https://gorest.co.in/public/v2/users/${id}`)
         .then(() => {
+          toast.success("User berhasil  dihapus!", {
+            type: "success",
+            position: "top-right",
+            timeout: 3000,
+          });
           axios
             .get("https://gorest.co.in/public/v2/users")
             .then((response) => {
@@ -48,6 +57,7 @@ export default {
     return {
       users,
       destroy,
+      toast,
     };
   },
 };
@@ -92,7 +102,7 @@ export default {
                     <td>
                       <button type="button" class="btn btn-info me-1"><i class="bi bi-eye"></i></button>
                       <router-link :to="{ name: 'edit.pengguna', params: { id: user.id } }" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i></router-link>
-                      <button type="button" class="btn btn-danger" @click="destroy(user.id, index)"><i class="bi bi-trash"></i></button>
+                      <button type="button" class="btn btn-danger" @click="destroy(user.id)"><i class="bi bi-trash"></i></button>
                     </td>
                   </tr>
                 </tbody>

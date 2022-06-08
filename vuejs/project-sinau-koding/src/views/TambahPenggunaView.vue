@@ -2,6 +2,7 @@
 import { reactive, ref } from "@vue/reactivity";
 import axios from "axios";
 import { RouterLink, useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 import NavbarComponent from "@/components/layouts/NavbarComponent.vue";
 import SidebarComponent from "@/components/layouts/SidebarComponent.vue";
 
@@ -24,7 +25,18 @@ export default {
 
     const router = useRouter();
 
+    const toast = useToast();
+
     function store() {
+      const btnAddUser = document.querySelector(".btn-add-user");
+      btnAddUser.removeChild(btnAddUser.children[0]);
+      btnAddUser.innerHTML = `
+        <span>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span>Loading...</span>
+        </span>
+      `;
+
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       axios
         .post("https://gorest.co.in/public/v2/users", this.user)
@@ -32,9 +44,18 @@ export default {
           router.push({
             name: "daftar.pengguna",
           });
+          toast.success("Berhasil menambahkan user!", {
+            type: "success",
+            timeout: 3000,
+            position: "top-right",
+          });
         })
         .catch((err) => {
           validation.value = err.response.data;
+          btnAddUser.removeChild(btnAddUser.children[0]);
+          btnAddUser.innerHTML = `
+            <span><i class="bi bi-save"></i> Submit</span>
+          `;
         });
     }
 
@@ -106,7 +127,9 @@ export default {
                     </span>
                   </div>
                   <div class="mb-3">
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Submit</button>
+                    <button type="submit" class="btn btn-primary btn-add-user">
+                      <span><i class="bi bi-save"></i> Submit</span>
+                    </button>
                   </div>
                 </form>
               </div>
