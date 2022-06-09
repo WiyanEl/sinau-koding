@@ -78,7 +78,7 @@ export default {
           </div>
         </div>
         <hr />
-        <div class="card shadow">
+        <div class="card shadow mb-4">
           <div class="card-body">
             <div class="table-responsive">
               <table class="table table-hover">
@@ -100,7 +100,7 @@ export default {
                     <td>{{ user.gender }}</td>
                     <td>{{ user.status }}</td>
                     <td>
-                      <button type="button" class="btn btn-info me-1"><i class="bi bi-eye"></i></button>
+                      <routerLink :to="{ name: 'detail.pengguna', params: { id: user.id } }" class="btn btn-info me-1"><i class="bi bi-eye"></i></routerLink>
                       <router-link :to="{ name: 'edit.pengguna', params: { id: user.id } }" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i></router-link>
                       <button type="button" class="btn btn-danger" @click="destroy(user.id)"><i class="bi bi-trash"></i></button>
                     </td>

@@ -22,7 +22,8 @@ export default {
       status: "",
     });
 
-    let validation = ref([]);
+    const validation = ref([]);
+    let messages = [];
 
     const router = useRouter();
     const route = useRoute();
@@ -67,7 +68,13 @@ export default {
           });
         })
         .catch((err) => {
-          validation = err.response.data;
+          validation.value = err.response.data;
+          messages = validation.value;
+
+          messages.forEach((message) => {
+            document.querySelector(`.${message.field}-error`).innerHTML = message.message;
+          });
+
           btnEditUser.removeChild(btnEditUser.children[0]);
           btnEditUser.innerHTML = `
             <span><i class="bi bi-save"></i> Save</span>
@@ -102,7 +109,7 @@ export default {
           </div>
         </div>
         <div class="row">
-          <div class="col-12 col-lg-10 col-xl-10 col-xxl-10">
+          <div class="col-12 col-lg-10">
             <h3>Ubah Pengguna</h3>
             <hr />
             <div class="card shadow">
@@ -111,16 +118,12 @@ export default {
                   <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
                     <input v-model="user.name" type="text" id="name" class="form-control" />
-                    <span v-if="validation.value" class="text-danger">
-                      {{ validation.value[0].message }}
-                    </span>
+                    <span class="text-danger name-error"></span>
                   </div>
                   <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input v-model="user.email" type="email" id="email" class="form-control" />
-                    <span v-if="validation.email" class="text-danger">
-                      {{ validation.email[0] }}
-                    </span>
+                    <span class="text-danger email-error"></span>
                   </div>
                   <div class="mb-3">
                     <label for="gender" class="form-label">Gender</label>
@@ -128,9 +131,7 @@ export default {
                       <option value="male">Male</option>
                       <option value="female">Female</option>
                     </select>
-                    <span v-if="validation.gender" class="text-danger">
-                      {{ validation.gender[0] }}
-                    </span>
+                    <span class="text-danger gender-error"></span>
                   </div>
                   <div class="mb-3">
                     <label for="status" class="form-label">Gender</label>
@@ -138,9 +139,7 @@ export default {
                       <option value="active">Active</option>
                       <option value="inactive">Inactive</option>
                     </select>
-                    <span v-if="validation.status" class="text-danger">
-                      {{ validation.status[0] }}
-                    </span>
+                    <span class="text-danger status-error"></span>
                   </div>
                   <div class="mb-3">
                     <button type="submit" class="btn btn-primary btn-edit-user">
