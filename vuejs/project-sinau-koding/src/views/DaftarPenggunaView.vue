@@ -1,10 +1,11 @@
 <script>
 import { RouterLink } from "vue-router";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import axios from "axios";
 import { useToast } from "vue-toastification";
 import NavbarComponent from "@/components/layouts/NavbarComponent.vue";
 import SidebarComponent from "@/components/layouts/SidebarComponent.vue";
+import postcss from "postcss";
 
 export default {
   components: {
@@ -29,8 +30,7 @@ export default {
         });
     });
 
-    function destroy(id) {
-      console.log(this);
+    function destroy(id, index) {
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       axios
         .delete(`https://gorest.co.in/public/v2/users/${id}`)
@@ -40,14 +40,7 @@ export default {
             position: "top-right",
             timeout: 3000,
           });
-          axios
-            .get("https://gorest.co.in/public/v2/users")
-            .then((response) => {
-              users.value = response.data;
-            })
-            .catch((err) => {
-              console.log(err.response);
-            });
+          users.value.splice(index, 1);
         })
         .catch((err) => {
           console.log(err);
@@ -102,7 +95,7 @@ export default {
                     <td>
                       <routerLink :to="{ name: 'detail.pengguna', params: { id: user.id } }" class="btn btn-info me-1"><i class="bi bi-eye"></i></routerLink>
                       <router-link :to="{ name: 'edit.pengguna', params: { id: user.id } }" class="btn btn-warning me-1"><i class="bi bi-pencil-square"></i></router-link>
-                      <button type="button" class="btn btn-danger" @click="destroy(user.id)"><i class="bi bi-trash"></i></button>
+                      <button type="button" class="btn btn-danger" @click="destroy(user.id, index)"><i class="bi bi-trash"></i></button>
                     </td>
                   </tr>
                 </tbody>

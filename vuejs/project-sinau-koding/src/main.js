@@ -11,15 +11,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 // Vue Toas Notification
 import "vue-toastification/dist/index.css";
 
-// pagination
-import Pagination from "vuejs-paginate-next";
-
 // style
 import "@/assets/css/style.css";
 
 const app = createApp(App);
-
-app.use(Pagination);
 
 app.use(router);
 

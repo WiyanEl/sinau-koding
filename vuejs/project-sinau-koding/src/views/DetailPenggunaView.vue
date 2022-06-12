@@ -22,9 +22,20 @@ export default {
       status: "",
     });
 
-    const posts = ref([]);
+    const post = reactive({
+      title: "",
+      body: "",
+    });
+
+    let posts = ref([]);
+
+    const validation = ref([]);
+
+    let messages = [];
 
     const route = useRoute();
+
+    const toast = useToast();
 
     onMounted(() => {
       // Get data user
@@ -51,10 +62,82 @@ export default {
         });
     });
 
+    function store() {
+      let btnAddPost = document.querySelector(".btn-add-post");
+      btnAddPost.removeChild(btnAddPost.children[0]);
+      btnAddPost.innerHTML = `
+        <span>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          <span>Loading...</span>
+        </span>
+      `;
+
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+      axios
+        .post(`https://gorest.co.in/public/v2/users/${route.params.id}/posts`, this.post)
+        .then(() => {
+          toast.success("Post berhasil  ditambah!", {
+            type: "success",
+            position: "top-right",
+            timeout: 3000,
+          });
+
+          btnAddPost.removeChild(btnAddPost.children[0]);
+          btnAddPost.innerHTML = `
+            <span><i class="bi bi-save"></i> Submit</span>
+          `;
+
+          post.title = "";
+          post.body = "";
+
+          axios
+            .get(`https://gorest.co.in/public/v2/users/${route.params.id}/posts`)
+            .then((response) => {
+              posts.value = response.data;
+            })
+            .catch((err) => {
+              console.log(err.response.data);
+            });
+        })
+        .catch((err) => {
+          validation.value = err.response.data;
+          messages = validation.value;
+
+          messages.forEach((message) => {
+            document.querySelector(`.${message.field}-error`).innerHTML = message.message;
+          });
+
+          btnAddPost.removeChild(btnAddPost.children[0]);
+          btnAddPost.innerHTML = `
+             <span><i class="bi bi-save"></i> Submit</span>
+          `;
+        });
+    }
+
+    function destroy(id, index) {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+      axios
+        .delete(`https://gorest.co.in/public/v2/posts/${id}`)
+        .then(() => {
+          toast.success("Post berhasil  dihapus!", {
+            type: "success",
+            position: "top-right",
+            timeout: 3000,
+          });
+          posts.value.splice(index, 1);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    }
+
     return {
       user,
       posts,
+      post,
       route,
+      store,
+      destroy,
     };
   },
 };
@@ -159,7 +242,7 @@ export default {
                         <td>{{ post.title }}</td>
                         <td>{{ post.body }}</td>
                         <td>
-                          <button type="button" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                          <button type="button" class="btn btn-danger" @click="destroy(post.id, index)"><i class="bi bi-trash"></i></button>
                         </td>
                       </tr>
                     </tbody>
@@ -183,19 +266,19 @@ export default {
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form>
+          <form @submit.prevent="store">
             <div class="mb-3">
               <label for="title" class="form-label">Title</label>
-              <input type="text" class="form-control" id="title" />
+              <input v-model="post.title" ref="title" type="text" class="form-control" id="title" />
               <span class="text-danger title-error"></span>
             </div>
             <div class="mb-3">
               <label for="body" class="form-label">Body</label>
-              <textarea id="body" class="form-control" rows="5"></textarea>
+              <textarea v-model="post.body" id="body" class="form-control" rows="5"></textarea>
               <span class="text-danger body-error"></span>
             </div>
             <div class="mb-3">
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary btn-add-post">
                 <span><i class="bi bi-save"></i> Submit</span>
               </button>
             </div>
